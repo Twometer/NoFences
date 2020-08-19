@@ -65,7 +65,7 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // Form1
+            // FenceWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -75,10 +75,12 @@
             this.DoubleBuffered = true;
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "Form1";
+            this.Name = "FenceWindow";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Test Fence";
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.FenceWindow_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FenceWindow_DragEnter);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.contextMenuStrip1.ResumeLayout(false);

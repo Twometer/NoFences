@@ -1,6 +1,8 @@
 ﻿using NoFences.Win32;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using static NoFences.Win32.WindowUtil;
 
@@ -8,7 +10,8 @@ namespace NoFences
 {
     public partial class FenceWindow : Form
     {
-
+        private Font titleFont;
+        private Font iconFont;
 
         public FenceWindow()
         {
@@ -16,7 +19,12 @@ namespace NoFences
             DropShadow.ApplyShadows(this);
             BlurUtil.EnableBlur(Handle);
             WindowUtil.HideFromAltTab(Handle);
-            MaximizeBox = false;
+
+            var family = new FontFamily("Segoe UI");
+            titleFont = new Font(family, 17);
+            iconFont = new Font(family, 10);
+
+            AllowDrop = true;
         }
 
         protected override void WndProc(ref Message m)
@@ -78,6 +86,14 @@ namespace NoFences
             Close();
         }
 
+        private const int titleHeight = 35;
+        private const int titleOffset = 3;
+        private const int itemWidth = 70;
+        private const int itemPadding = 15;
+        private const float shadowDist = 1.5f;
+
+        private List<string> files = new List<string>();
+
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
@@ -85,13 +101,47 @@ namespace NoFences
 
             e.Graphics.Clear(Color.Transparent);
             e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Black)), ClientRectangle);
-            var font = new Font(Font.FontFamily, 17);
-            var measure = e.Graphics.MeasureString(Text, font);
-            e.Graphics.DrawString(Text, font, Brushes.White, new PointF(Width / 2 - measure.Width / 2, 15));
+
+            var measure = e.Graphics.MeasureString(Text, titleFont);
+            e.Graphics.DrawString(Text, titleFont, Brushes.White, new PointF(Width / 2 - measure.Width / 2, titleOffset));
+
+            e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.Black)), new RectangleF(0, 0, Width, titleHeight));
+
+            var x = 15;
+            foreach (var file in files)
+            {
+                RenderFile(e.Graphics, file, x, 15);
+                x += itemWidth + itemPadding;
+            }
+        }
+
+        private void RenderFile(Graphics g, string file, int x, int y)
+        {
+            var icon = Icon.ExtractAssociatedIcon(file);
+            var name = Path.GetFileNameWithoutExtension(file);
+
+            g.DrawIcon(icon, x + itemWidth / 2 - icon.Width / 2, y+ titleHeight);
+            var size = g.MeasureString(name, iconFont);
+            g.DrawString(name, iconFont, new SolidBrush(Color.FromArgb(180, 15, 15, 15)), new PointF(x + shadowDist + itemWidth / 2 - size.Width / 2, y + icon.Height + 5 + shadowDist+ titleHeight));
+            g.DrawString(name, iconFont, Brushes.White, new PointF(x + itemWidth / 2 - size.Width / 2, y + icon.Height + 5+ titleHeight));
         }
 
         private void Form1_Resize(object sender, EventArgs e)
         {
+            Refresh();
+        }
+
+        private void FenceWindow_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Move;
+        }
+
+        private void FenceWindow_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (string file in files)
+                if (File.Exists(file))
+                this.files.Add(file);
             Refresh();
         }
     }
