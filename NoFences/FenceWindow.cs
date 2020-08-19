@@ -24,6 +24,10 @@ namespace NoFences
         private readonly Font titleFont;
         private readonly Font iconFont;
 
+        private string selectedItem;
+        private bool shouldUpdateSelection;
+        private bool hasSelectionUpdated;
+
         public FenceWindow()
         {
             InitializeComponent();
@@ -124,6 +128,18 @@ namespace NoFences
             Refresh();
         }
 
+        private void FenceWindow_MouseLeave(object sender, EventArgs e)
+        {
+            selectedItem = null;
+            Refresh();
+        }
+
+        private void FenceWindow_Click(object sender, EventArgs e)
+        {
+            shouldUpdateSelection = true;
+            Refresh();
+        }
+
         private void FenceWindow_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
@@ -149,6 +165,12 @@ namespace NoFences
                     y += itemHeight + itemPadding;
                 }
             }
+
+            if (shouldUpdateSelection && !hasSelectionUpdated)
+                selectedItem = null;
+
+            hasSelectionUpdated = false;
+            shouldUpdateSelection = false;
         }
 
         private void RenderFile(Graphics g, string file, int x, int y)
@@ -163,16 +185,39 @@ namespace NoFences
 
             var textSize = g.MeasureString(name, iconFont, textMaxSize, stringFormat);
             var outlineRect = new Rectangle(x - 2, y - 2, itemWidth + 2, icon.Height + (int)textSize.Height + 5 + 2);
+            var outlineRectInner = outlineRect.Shrink(1);
 
             var mousePos = PointToClient(MousePosition);
             var mouseOver = mousePos.X >= x && mousePos.Y >= y && mousePos.X < x + outlineRect.Width && mousePos.Y < y + outlineRect.Height;
 
-            if (mouseOver)
+            if (mouseOver && shouldUpdateSelection)
             {
-                g.DrawRectangle(new Pen(Color.FromArgb(120, SystemColors.ActiveBorder)), outlineRect.Shrink(1));
-                g.FillRectangle(new SolidBrush(Color.FromArgb(80, SystemColors.ActiveCaption)), outlineRect);
+                selectedItem = file;
+                shouldUpdateSelection = false;
+                hasSelectionUpdated = true;
             }
 
+            if (selectedItem == file)
+            {
+                if (mouseOver)
+                {
+                    g.DrawRectangle(new Pen(Color.FromArgb(120, SystemColors.ActiveBorder)), outlineRectInner);
+                    g.FillRectangle(new SolidBrush(Color.FromArgb(100, SystemColors.GradientActiveCaption)), outlineRect);
+                }
+                else
+                {
+                    g.DrawRectangle(new Pen(Color.FromArgb(120, SystemColors.ActiveBorder)), outlineRectInner);
+                    g.FillRectangle(new SolidBrush(Color.FromArgb(80, SystemColors.GradientInactiveCaption)), outlineRect);
+                }
+            }
+            else
+            {
+                if (mouseOver)
+                {
+                    g.DrawRectangle(new Pen(Color.FromArgb(120, SystemColors.ActiveBorder)), outlineRectInner);
+                    g.FillRectangle(new SolidBrush(Color.FromArgb(80, SystemColors.ActiveCaption)), outlineRect);
+                }
+            }
 
             g.DrawIcon(icon, x + itemWidth / 2 - icon.Width / 2, y);
             g.DrawString(name, iconFont, new SolidBrush(Color.FromArgb(180, 15, 15, 15)), new RectangleF(textPosition.Move(shadowDist, shadowDist), textMaxSize), stringFormat);
