@@ -2,6 +2,7 @@
 using NoFences.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -25,8 +26,11 @@ namespace NoFences
         private readonly Font iconFont;
 
         private string selectedItem;
+        private string hoveringItem;
         private bool shouldUpdateSelection;
+        private bool shouldRunDoubleClick;
         private bool hasSelectionUpdated;
+        private bool hasHoverUpdated;
 
         public FenceWindow()
         {
@@ -103,6 +107,18 @@ namespace NoFences
             Close();
         }
 
+        private void deleteItemToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            files.Remove(hoveringItem);
+            hoveringItem = null;
+            Refresh();
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            deleteItemToolStripMenuItem.Visible = hoveringItem != null;
+        }
+
         private void FenceWindow_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -140,6 +156,12 @@ namespace NoFences
             Refresh();
         }
 
+        private void FenceWindow_DoubleClick(object sender, EventArgs e)
+        {
+            shouldRunDoubleClick = true;
+            Refresh();
+        }
+
         private void FenceWindow_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
@@ -169,8 +191,13 @@ namespace NoFences
             if (shouldUpdateSelection && !hasSelectionUpdated)
                 selectedItem = null;
 
-            hasSelectionUpdated = false;
+            if (!hasHoverUpdated)
+                hoveringItem = null;
+
+            shouldRunDoubleClick = false;
             shouldUpdateSelection = false;
+            hasSelectionUpdated = false;
+            hasHoverUpdated = false;
         }
 
         private void RenderFile(Graphics g, string file, int x, int y)
@@ -190,11 +217,23 @@ namespace NoFences
             var mousePos = PointToClient(MousePosition);
             var mouseOver = mousePos.X >= x && mousePos.Y >= y && mousePos.X < x + outlineRect.Width && mousePos.Y < y + outlineRect.Height;
 
+            if (mouseOver)
+            {
+                hoveringItem = file;
+                hasHoverUpdated = true;
+            }
+
             if (mouseOver && shouldUpdateSelection)
             {
                 selectedItem = file;
                 shouldUpdateSelection = false;
                 hasSelectionUpdated = true;
+            }
+
+            if (mouseOver && shouldRunDoubleClick)
+            {
+                Process.Start(file);
+                shouldRunDoubleClick = false;
             }
 
             if (selectedItem == file)
@@ -224,6 +263,14 @@ namespace NoFences
             g.DrawString(name, iconFont, Brushes.White, new RectangleF(textPosition, textMaxSize), stringFormat);
         }
 
+        private void renameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dialog = new EditDialog(Text);
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                Text = dialog.NewName;
+            }
+        }
 
     }
 }

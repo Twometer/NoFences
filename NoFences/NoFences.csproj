@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditDialog.Designer.cs">
+      <DependentUpon>EditDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="FenceWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -58,6 +64,9 @@
     <Compile Include="Win32\BlurUtil.cs" />
     <Compile Include="Win32\DropShadow.cs" />
     <Compile Include="Win32\WindowUtil.cs" />
+    <EmbeddedResource Include="EditDialog.resx">
+      <DependentUpon>EditDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FenceWindow.resx">
       <DependentUpon>FenceWindow.cs</DependentUpon>
     </EmbeddedResource>
