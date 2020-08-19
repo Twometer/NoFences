@@ -60,10 +60,12 @@ namespace NoFences
             // Then, allow dragging and resizing
             if (m.Msg == WM_NCHITTEST)
             {
-                if ((int)m.Result == HTCLIENT)     // drag the form
-                    m.Result = (IntPtr)HTCAPTION;
 
                 var pt = PointToClient(new Point(m.LParam.ToInt32()));
+
+                if ((int)m.Result == HTCLIENT && pt.Y < titleHeight)     // drag the form
+                    m.Result = (IntPtr)HTCAPTION;
+
                 if (pt.X < 10 && pt.Y < 10)
                     m.Result = new IntPtr(HTTOPLEFT);
                 else if (pt.X > (Width - 10) && pt.Y < 10)
