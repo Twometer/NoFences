@@ -52,7 +52,7 @@
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.contextMenuStrip1.Size = new System.Drawing.Size(142, 142);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 164);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // lockedToolStripMenuItem
@@ -68,6 +68,7 @@
             this.minifyToolStripMenuItem.Name = "minifyToolStripMenuItem";
             this.minifyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.minifyToolStripMenuItem.Text = "Minify";
+            this.minifyToolStripMenuItem.Click += new System.EventHandler(this.minifyToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -123,6 +124,7 @@
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FenceWindow_DragEnter);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.FenceWindow_Paint);
             this.DoubleClick += new System.EventHandler(this.FenceWindow_DoubleClick);
+            this.MouseEnter += new System.EventHandler(this.FenceWindow_MouseEnter);
             this.MouseLeave += new System.EventHandler(this.FenceWindow_MouseLeave);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FenceWindow_MouseMove);
             this.Resize += new System.EventHandler(this.FenceWindow_Resize);

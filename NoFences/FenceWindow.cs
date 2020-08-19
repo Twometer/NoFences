@@ -31,6 +31,8 @@ namespace NoFences
         private bool shouldRunDoubleClick;
         private bool hasSelectionUpdated;
         private bool hasHoverUpdated;
+        private bool isMinified;
+        private int prevHeight;
 
         public FenceWindow()
         {
@@ -83,7 +85,10 @@ namespace NoFences
                 var pt = PointToClient(new Point(m.LParam.ToInt32()));
 
                 if ((int)m.Result == HTCLIENT && pt.Y < titleHeight)     // drag the form
+                {
                     m.Result = (IntPtr)HTCAPTION;
+                    FenceWindow_MouseEnter(null, null);
+                }
 
                 if (pt.X < 10 && pt.Y < 10)
                     m.Result = new IntPtr(HTTOPLEFT);
@@ -144,10 +149,34 @@ namespace NoFences
             Refresh();
         }
 
+        private void FenceWindow_MouseEnter(object sender, EventArgs e)
+        {
+            if (minifyToolStripMenuItem.Checked && isMinified)
+            {
+                Height = prevHeight;
+                isMinified = false;
+            }
+        }
+
         private void FenceWindow_MouseLeave(object sender, EventArgs e)
         {
+            if (minifyToolStripMenuItem.Checked && !isMinified)
+            {
+                isMinified = true;
+                prevHeight = Height;
+                Height = titleHeight;
+            }
             selectedItem = null;
             Refresh();
+        }
+
+        private void minifyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (isMinified)
+            {
+                Height = prevHeight;
+                isMinified = false;
+            }
         }
 
         private void FenceWindow_Click(object sender, EventArgs e)
@@ -282,6 +311,7 @@ namespace NoFences
             if (Application.OpenForms.Count == 0)
                 Application.Exit();
         }
+
     }
     
 }
