@@ -1,4 +1,5 @@
-﻿using NoFences.Win32;
+﻿using NoFences.Util;
+using NoFences.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,8 +11,18 @@ namespace NoFences
 {
     public partial class FenceWindow : Form
     {
-        private Font titleFont;
-        private Font iconFont;
+        private const int titleHeight = 35;
+        private const int titleOffset = 3;
+        private const int itemWidth = 75;
+        private const int itemHeight = 32 + itemPadding + textHeight;
+        private const int textHeight = 35;
+        private const int itemPadding = 15;
+        private const float shadowDist = 1.5f;
+
+        private readonly List<string> files = new List<string>();
+
+        private readonly Font titleFont;
+        private readonly Font iconFont;
 
         public FenceWindow()
         {
@@ -22,7 +33,7 @@ namespace NoFences
 
             var family = new FontFamily("Segoe UI");
             titleFont = new Font(family, 17);
-            iconFont = new Font(family, 10);
+            iconFont = new Font(family, 9);
 
             AllowDrop = true;
         }
@@ -88,32 +99,55 @@ namespace NoFences
             Close();
         }
 
-        private const int titleHeight = 35;
-        private const int titleOffset = 3;
-        private const int itemWidth = 70;
-        private const int itemPadding = 15;
-        private const float shadowDist = 1.5f;
+        private void FenceWindow_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Move;
+        }
 
-        private List<string> files = new List<string>();
+        private void FenceWindow_DragDrop(object sender, DragEventArgs e)
+        {
+            var dropped = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (var file in dropped)
+                if (!files.Contains(file) && File.Exists(file))
+                    files.Add(file);
+            Refresh();
+        }
 
-        private void Form1_Paint(object sender, PaintEventArgs e)
+        private void FenceWindow_Resize(object sender, EventArgs e)
+        {
+            Refresh();
+        }
+
+        private void FenceWindow_MouseMove(object sender, MouseEventArgs e)
+        {
+            Refresh();
+        }
+
+        private void FenceWindow_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            e.Graphics.Clear(Color.Transparent);
+            // Background
             e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Black)), ClientRectangle);
 
-            var measure = e.Graphics.MeasureString(Text, titleFont);
-            e.Graphics.DrawString(Text, titleFont, Brushes.White, new PointF(Width / 2 - measure.Width / 2, titleOffset));
-
+            // Title
+            e.Graphics.DrawString(Text, titleFont, Brushes.White, new PointF(Width / 2, titleOffset), new StringFormat { Alignment = StringAlignment.Center });
             e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.Black)), new RectangleF(0, 0, Width, titleHeight));
 
-            var x = 15;
+            // Items
+            var x = itemPadding;
+            var y = itemPadding;
             foreach (var file in files)
             {
-                RenderFile(e.Graphics, file, x, 15);
+                RenderFile(e.Graphics, file, x, y + titleHeight);
                 x += itemWidth + itemPadding;
+                if (x + itemWidth > Width)
+                {
+                    x = itemPadding;
+                    y += itemHeight + itemPadding;
+                }
             }
         }
 
@@ -122,29 +156,29 @@ namespace NoFences
             var icon = Icon.ExtractAssociatedIcon(file);
             var name = Path.GetFileNameWithoutExtension(file);
 
-            g.DrawIcon(icon, x + itemWidth / 2 - icon.Width / 2, y+ titleHeight);
-            var size = g.MeasureString(name, iconFont);
-            g.DrawString(name, iconFont, new SolidBrush(Color.FromArgb(180, 15, 15, 15)), new PointF(x + shadowDist + itemWidth / 2 - size.Width / 2, y + icon.Height + 5 + shadowDist+ titleHeight));
-            g.DrawString(name, iconFont, Brushes.White, new PointF(x + itemWidth / 2 - size.Width / 2, y + icon.Height + 5+ titleHeight));
+            var textPosition = new PointF(x, y + icon.Height + 5);
+            var textMaxSize = new SizeF(itemWidth, textHeight);
+
+            var stringFormat = new StringFormat { Alignment = StringAlignment.Center, Trimming = StringTrimming.EllipsisCharacter };
+
+            var textSize = g.MeasureString(name, iconFont, textMaxSize, stringFormat);
+            var outlineRect = new Rectangle(x - 2, y - 2, itemWidth + 2, icon.Height + (int)textSize.Height + 5 + 2);
+
+            var mousePos = PointToClient(MousePosition);
+            var mouseOver = mousePos.X >= x && mousePos.Y >= y && mousePos.X < x + outlineRect.Width && mousePos.Y < y + outlineRect.Height;
+
+            if (mouseOver)
+            {
+                g.DrawRectangle(new Pen(Color.FromArgb(120, SystemColors.ActiveBorder)), outlineRect.Shrink(1));
+                g.FillRectangle(new SolidBrush(Color.FromArgb(80, SystemColors.ActiveCaption)), outlineRect);
+            }
+
+
+            g.DrawIcon(icon, x + itemWidth / 2 - icon.Width / 2, y);
+            g.DrawString(name, iconFont, new SolidBrush(Color.FromArgb(180, 15, 15, 15)), new RectangleF(textPosition.Move(shadowDist, shadowDist), textMaxSize), stringFormat);
+            g.DrawString(name, iconFont, Brushes.White, new RectangleF(textPosition, textMaxSize), stringFormat);
         }
 
-        private void Form1_Resize(object sender, EventArgs e)
-        {
-            Refresh();
-        }
 
-        private void FenceWindow_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Move;
-        }
-
-        private void FenceWindow_DragDrop(object sender, DragEventArgs e)
-        {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (string file in files)
-                if (File.Exists(file))
-                this.files.Add(file);
-            Refresh();
-        }
     }
 }

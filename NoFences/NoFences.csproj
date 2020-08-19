@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\Extensions.cs" />
     <Compile Include="Win32\BlurUtil.cs" />
     <Compile Include="Win32\DropShadow.cs" />
     <Compile Include="Win32\WindowUtil.cs" />
