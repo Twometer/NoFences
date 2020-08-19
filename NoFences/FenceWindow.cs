@@ -272,5 +272,16 @@ namespace NoFences
             }
         }
 
+        private void newFenceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FenceWindow().Show();
+        }
+
+        private void FenceWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (Application.OpenForms.Count == 0)
+                Application.Exit();
+        }
     }
+    
 }

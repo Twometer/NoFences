@@ -36,6 +36,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newFenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,10 +48,11 @@
             this.minifyToolStripMenuItem,
             this.renameToolStripMenuItem,
             this.toolStripSeparator1,
+            this.newFenceToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 142);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(142, 142);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // lockedToolStripMenuItem
@@ -76,7 +78,7 @@
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Text = "Close Fence";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // renameToolStripMenuItem
@@ -94,6 +96,13 @@
             this.deleteItemToolStripMenuItem.Text = "Delete item";
             this.deleteItemToolStripMenuItem.Click += new System.EventHandler(this.deleteItemToolStripMenuItem_Click);
             // 
+            // newFenceToolStripMenuItem
+            // 
+            this.newFenceToolStripMenuItem.Name = "newFenceToolStripMenuItem";
+            this.newFenceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newFenceToolStripMenuItem.Text = "New Fence";
+            this.newFenceToolStripMenuItem.Click += new System.EventHandler(this.newFenceToolStripMenuItem_Click);
+            // 
             // FenceWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -107,7 +116,8 @@
             this.Name = "FenceWindow";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Text = "Test Fence";
+            this.Text = "New Fence";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FenceWindow_FormClosed);
             this.Click += new System.EventHandler(this.FenceWindow_Click);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.FenceWindow_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FenceWindow_DragEnter);
@@ -130,6 +140,7 @@
         private System.Windows.Forms.ToolStripMenuItem minifyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteItemToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newFenceToolStripMenuItem;
     }
 }
 
