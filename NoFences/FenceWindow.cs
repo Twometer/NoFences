@@ -6,39 +6,50 @@ using static NoFences.Win32.WindowUtil;
 
 namespace NoFences
 {
-    public partial class Form1 : Form
+    public partial class FenceWindow : Form
     {
 
 
-        public Form1()
+        public FenceWindow()
         {
             InitializeComponent();
             DropShadow.ApplyShadows(this);
             BlurUtil.EnableBlur(Handle);
             WindowUtil.HideFromAltTab(Handle);
+            MaximizeBox = false;
         }
 
         protected override void WndProc(ref Message m)
         {
+            // Remove border
             if (m.Msg == 0x0083)
             {
                 m.Result = IntPtr.Zero;
                 return;
             }
 
+            // Prevent maximize
+            if ((m.Msg == WM_SYSCOMMAND) && m.WParam.ToInt32() == SC_MAXIMIZE)
+            {
+                m.Result = IntPtr.Zero;
+                return;
+            }
+
+            // Prevent foreground
             if (m.Msg == WM_SETFOCUS)
             {
                 SetWindowPos(Handle, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
-            }
-            else
-            {
-                base.WndProc(ref m);
+                return;
             }
 
+            // Other messages
+            base.WndProc(ref m);
+
+            // If not locked and using the left mouse button
             if (MouseButtons == MouseButtons.Right || lockedToolStripMenuItem.Checked)
                 return;
 
-
+            // Then, allow dragging and resizing
             if (m.Msg == WM_NCHITTEST)
             {
                 if ((int)m.Result == HTCLIENT)     // drag the form
@@ -60,8 +71,6 @@ namespace NoFences
                 else if (pt.X > (Width - 10))
                     m.Result = new IntPtr(HTRIGHT);
             }
-
-
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -78,7 +87,7 @@ namespace NoFences
             e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.Black)), ClientRectangle);
             var font = new Font(Font.FontFamily, 17);
             var measure = e.Graphics.MeasureString(Text, font);
-            e.Graphics.DrawString(Text, font, Brushes.White, new PointF(Width / 2 - measure.Width / 2, 15));            
+            e.Graphics.DrawString(Text, font, Brushes.White, new PointF(Width / 2 - measure.Width / 2, 15));
         }
 
         private void Form1_Resize(object sender, EventArgs e)

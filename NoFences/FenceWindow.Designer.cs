@@ -1,6 +1,6 @@
 ﻿namespace NoFences
 {
-    partial class Form1
+    partial class FenceWindow
     {
         /// <summary>
         /// Required designer variable.
