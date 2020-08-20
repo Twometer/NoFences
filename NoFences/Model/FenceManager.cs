@@ -47,6 +47,11 @@ namespace NoFences.Model
             new FenceWindow(fenceInfo).Show();
         }
 
+        public void RemoveFence(FenceInfo info)
+        {
+            Directory.Delete(GetFolderPath(info), true);
+        }
+
         public void UpdateFence(FenceInfo fenceInfo)
         {
             var path = GetFolderPath(fenceInfo);

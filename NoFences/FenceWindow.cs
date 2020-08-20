@@ -35,6 +35,9 @@ namespace NoFences
         private bool isMinified;
         private int prevHeight;
 
+        private ThrottledExecution throttledMove = new ThrottledExecution(TimeSpan.FromSeconds(4));
+        private ThrottledExecution throttledResize = new ThrottledExecution(TimeSpan.FromSeconds(4));
+
         public FenceWindow(FenceInfo fenceInfo)
         {
             InitializeComponent();
@@ -48,12 +51,18 @@ namespace NoFences
 
             AllowDrop = true;
 
-            
+
             this.fenceInfo = fenceInfo;
             Text = fenceInfo.Name;
             Location = new Point(fenceInfo.PosX, fenceInfo.PosY);
+
             Width = fenceInfo.Width;
             Height = fenceInfo.Height;
+
+            prevHeight = Height;
+            lockedToolStripMenuItem.Checked = fenceInfo.Locked;
+            minifyToolStripMenuItem.Checked = fenceInfo.CanMinify;
+            Minify();
         }
 
         protected override void WndProc(ref Message m)
@@ -117,7 +126,11 @@ namespace NoFences
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Close();
+            if (MessageBox.Show(this, "Really remove this fence?", "Remove", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                FenceManager.Instance.RemoveFence(fenceInfo);
+                Close();
+            }
         }
 
         private void deleteItemToolStripMenuItem_Click(object sender, EventArgs e)
@@ -151,6 +164,12 @@ namespace NoFences
 
         private void FenceWindow_Resize(object sender, EventArgs e)
         {
+            throttledResize.Run(() =>
+            {
+                fenceInfo.Width = Width;
+                fenceInfo.Height = isMinified ? prevHeight : Height;
+                Save();
+            });
             Refresh();
         }
 
@@ -170,14 +189,19 @@ namespace NoFences
 
         private void FenceWindow_MouseLeave(object sender, EventArgs e)
         {
+            Minify();
+            selectedItem = null;
+            Refresh();
+        }
+
+        private void Minify()
+        {
             if (minifyToolStripMenuItem.Checked && !isMinified)
             {
                 isMinified = true;
                 prevHeight = Height;
                 Height = titleHeight;
             }
-            selectedItem = null;
-            Refresh();
         }
 
         private void minifyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -187,6 +211,9 @@ namespace NoFences
                 Height = prevHeight;
                 isMinified = false;
             }
+            fenceInfo.CanMinify = minifyToolStripMenuItem.Checked;
+            Save();
+
         }
 
         private void FenceWindow_Click(object sender, EventArgs e)
@@ -309,6 +336,7 @@ namespace NoFences
             {
                 Text = dialog.NewName;
                 fenceInfo.Name = Text;
+                Refresh();
                 Save();
             }
         }
@@ -324,10 +352,31 @@ namespace NoFences
                 Application.Exit();
         }
 
+        private readonly object saveLock = new object();
         private void Save()
         {
-            FenceManager.Instance.UpdateFence(fenceInfo);
+            lock (saveLock)
+            {
+                FenceManager.Instance.UpdateFence(fenceInfo);
+            }
+        }
+
+        private void FenceWindow_LocationChanged(object sender, EventArgs e)
+        {
+            throttledMove.Run(() =>
+            {
+                fenceInfo.PosX = Location.X;
+                fenceInfo.PosY = Location.Y;
+                Save();
+            });
+        }
+
+        private void lockedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            fenceInfo.Locked = lockedToolStripMenuItem.Checked;
+            Save();
         }
     }
-    
+
 }
+

@@ -5,7 +5,7 @@ namespace NoFences.Model
 {
     public class FenceInfo
     {
-        public Guid Id { get; }
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
 
@@ -17,7 +17,11 @@ namespace NoFences.Model
 
         public int Height { get; set; }
 
-        public List<string> Files { get; } = new List<string>();
+        public bool Locked { get; set; }
+
+        public bool CanMinify { get; set; }
+
+        public List<string> Files { get; set; } = new List<string>();
 
         public FenceInfo()
         {

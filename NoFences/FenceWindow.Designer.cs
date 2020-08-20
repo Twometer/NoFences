@@ -52,7 +52,7 @@
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.contextMenuStrip1.Size = new System.Drawing.Size(142, 142);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 164);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // deleteItemToolStripMenuItem
@@ -67,8 +67,9 @@
             // 
             this.lockedToolStripMenuItem.CheckOnClick = true;
             this.lockedToolStripMenuItem.Name = "lockedToolStripMenuItem";
-            this.lockedToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.lockedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.lockedToolStripMenuItem.Text = "Lock";
+            this.lockedToolStripMenuItem.Click += new System.EventHandler(this.lockedToolStripMenuItem_Click);
             // 
             // minifyToolStripMenuItem
             // 
@@ -100,8 +101,8 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-            this.exitToolStripMenuItem.Text = "Close Fence";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Text = "Remove Fence";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // FenceWindow
@@ -109,7 +110,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(465, 540);
+            this.ClientSize = new System.Drawing.Size(338, 110);
             this.ContextMenuStrip = this.contextMenuStrip1;
             this.DoubleBuffered = true;
             this.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -120,6 +121,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "New Fence";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FenceWindow_FormClosed);
+            this.LocationChanged += new System.EventHandler(this.FenceWindow_LocationChanged);
             this.Click += new System.EventHandler(this.FenceWindow_Click);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.FenceWindow_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FenceWindow_DragEnter);
