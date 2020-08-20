@@ -52,6 +52,8 @@
     <Compile Include="EditDialog.Designer.cs">
       <DependentUpon>EditDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\FenceInfo.cs" />
+    <Compile Include="Model\FenceManager.cs" />
     <Compile Include="FenceWindow.cs">
       <SubType>Form</SubType>
     </Compile>

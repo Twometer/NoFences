@@ -1,4 +1,5 @@
-﻿using NoFences.Util;
+﻿using NoFences.Model;
+using NoFences.Util;
 using NoFences.Win32;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace NoFences
         private const int itemPadding = 15;
         private const float shadowDist = 1.5f;
 
-        private readonly List<string> files = new List<string>();
+        private readonly FenceInfo fenceInfo;
 
         private readonly Font titleFont;
         private readonly Font iconFont;
@@ -34,7 +35,7 @@ namespace NoFences
         private bool isMinified;
         private int prevHeight;
 
-        public FenceWindow()
+        public FenceWindow(FenceInfo fenceInfo)
         {
             InitializeComponent();
             DropShadow.ApplyShadows(this);
@@ -46,6 +47,13 @@ namespace NoFences
             iconFont = new Font(family, 9);
 
             AllowDrop = true;
+
+            
+            this.fenceInfo = fenceInfo;
+            Text = fenceInfo.Name;
+            Location = new Point(fenceInfo.PosX, fenceInfo.PosY);
+            Width = fenceInfo.Width;
+            Height = fenceInfo.Height;
         }
 
         protected override void WndProc(ref Message m)
@@ -114,8 +122,9 @@ namespace NoFences
 
         private void deleteItemToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            files.Remove(hoveringItem);
+            fenceInfo.Files.Remove(hoveringItem);
             hoveringItem = null;
+            Save();
             Refresh();
         }
 
@@ -134,8 +143,9 @@ namespace NoFences
         {
             var dropped = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var file in dropped)
-                if (!files.Contains(file) && File.Exists(file))
-                    files.Add(file);
+                if (!fenceInfo.Files.Contains(file) && File.Exists(file))
+                    fenceInfo.Files.Add(file);
+            Save();
             Refresh();
         }
 
@@ -206,7 +216,7 @@ namespace NoFences
             // Items
             var x = itemPadding;
             var y = itemPadding;
-            foreach (var file in files)
+            foreach (var file in fenceInfo.Files)
             {
                 RenderFile(e.Graphics, file, x, y + titleHeight);
                 x += itemWidth + itemPadding;
@@ -298,12 +308,14 @@ namespace NoFences
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
                 Text = dialog.NewName;
+                fenceInfo.Name = Text;
+                Save();
             }
         }
 
         private void newFenceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FenceWindow().Show();
+            FenceManager.Instance.CreateFence("New fence");
         }
 
         private void FenceWindow_FormClosed(object sender, FormClosedEventArgs e)
@@ -312,6 +324,10 @@ namespace NoFences
                 Application.Exit();
         }
 
+        private void Save()
+        {
+            FenceManager.Instance.UpdateFence(fenceInfo);
+        }
     }
     
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NoFences.Model;
+using System;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -18,7 +19,11 @@ namespace NoFences
                 {
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
-                    new FenceWindow().Show();
+
+                    FenceManager.Instance.LoadFences();
+                    if (Application.OpenForms.Count == 0)
+                        FenceManager.Instance.CreateFence("First fence");
+
                     Application.Run();
                 }
             }
