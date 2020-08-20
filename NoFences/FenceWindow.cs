@@ -148,7 +148,7 @@ namespace NoFences
 
         private void FenceWindow_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) && !lockedToolStripMenuItem.Checked)
                 e.Effect = DragDropEffects.Move;
         }
 
