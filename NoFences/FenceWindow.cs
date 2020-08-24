@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static NoFences.Win32.WindowUtil;
 
@@ -37,6 +38,8 @@ namespace NoFences
 
         private ThrottledExecution throttledMove = new ThrottledExecution(TimeSpan.FromSeconds(4));
         private ThrottledExecution throttledResize = new ThrottledExecution(TimeSpan.FromSeconds(4));
+
+        private DateTime lastRedraw = DateTime.Now;
 
         public FenceWindow(FenceInfo fenceInfo)
         {
@@ -170,6 +173,7 @@ namespace NoFences
                 fenceInfo.Height = isMinified ? prevHeight : Height;
                 Save();
             });
+
             Refresh();
         }
 
@@ -182,8 +186,8 @@ namespace NoFences
         {
             if (minifyToolStripMenuItem.Checked && isMinified)
             {
-                Height = prevHeight;
                 isMinified = false;
+                Height = prevHeight;
             }
         }
 
@@ -230,6 +234,10 @@ namespace NoFences
 
         private void FenceWindow_Paint(object sender, PaintEventArgs e)
         {
+            if ((DateTime.Now - lastRedraw).TotalMilliseconds < 1)
+                return;
+            lastRedraw = DateTime.Now;
+
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
@@ -298,8 +306,19 @@ namespace NoFences
 
             if (mouseOver && shouldRunDoubleClick)
             {
-                Process.Start(file);
                 shouldRunDoubleClick = false;
+                Task.Run(() =>
+                {
+                    // start asynchronously
+                    try
+                    {
+                        Process.Start(file);
+                    }
+                    catch
+                    {
+                        // just ignore
+                    }
+                });
             }
 
             if (selectedItem == file)

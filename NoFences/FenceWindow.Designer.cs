@@ -52,14 +52,14 @@
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 164);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(152, 142);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // deleteItemToolStripMenuItem
             // 
             this.deleteItemToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.deleteItemToolStripMenuItem.Name = "deleteItemToolStripMenuItem";
-            this.deleteItemToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.deleteItemToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.deleteItemToolStripMenuItem.Text = "Delete item";
             this.deleteItemToolStripMenuItem.Click += new System.EventHandler(this.deleteItemToolStripMenuItem_Click);
             // 
@@ -67,7 +67,7 @@
             // 
             this.lockedToolStripMenuItem.CheckOnClick = true;
             this.lockedToolStripMenuItem.Name = "lockedToolStripMenuItem";
-            this.lockedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.lockedToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.lockedToolStripMenuItem.Text = "Lock";
             this.lockedToolStripMenuItem.Click += new System.EventHandler(this.lockedToolStripMenuItem_Click);
             // 
@@ -75,33 +75,33 @@
             // 
             this.minifyToolStripMenuItem.CheckOnClick = true;
             this.minifyToolStripMenuItem.Name = "minifyToolStripMenuItem";
-            this.minifyToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.minifyToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.minifyToolStripMenuItem.Text = "Minify";
             this.minifyToolStripMenuItem.Click += new System.EventHandler(this.minifyToolStripMenuItem_Click);
             // 
             // renameToolStripMenuItem
             // 
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.renameToolStripMenuItem.Text = "Rename";
             this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(138, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
             // 
             // newFenceToolStripMenuItem
             // 
             this.newFenceToolStripMenuItem.Name = "newFenceToolStripMenuItem";
-            this.newFenceToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.newFenceToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.newFenceToolStripMenuItem.Text = "New Fence";
             this.newFenceToolStripMenuItem.Click += new System.EventHandler(this.newFenceToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.exitToolStripMenuItem.Text = "Remove Fence";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -115,6 +115,7 @@
             this.DoubleBuffered = true;
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.MinimizeBox = false;
             this.Name = "FenceWindow";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
