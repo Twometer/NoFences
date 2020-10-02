@@ -82,7 +82,8 @@ namespace NoFences
             }
 
             // Mouse leave
-            if (m.Msg == 0x02a2) {
+            var myrect = new Rectangle(Location, Size);
+            if (m.Msg == 0x02a2 && !myrect.IntersectsWith(new Rectangle(MousePosition, new Size(1, 1)))) {
                 Minify();
             }
 
@@ -193,6 +194,7 @@ namespace NoFences
 
         private void FenceWindow_MouseEnter(object sender, EventArgs e)
         {
+            Console.WriteLine("mouseenter");
             if (minifyToolStripMenuItem.Checked && isMinified)
             {
                 isMinified = false;
