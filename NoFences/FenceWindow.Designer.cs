@@ -122,6 +122,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "New Fence";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FenceWindow_FormClosed);
+            this.Load += new System.EventHandler(this.FenceWindow_Load);
             this.LocationChanged += new System.EventHandler(this.FenceWindow_LocationChanged);
             this.Click += new System.EventHandler(this.FenceWindow_Click);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.FenceWindow_DragDrop);

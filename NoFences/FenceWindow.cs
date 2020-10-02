@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static NoFences.Win32.WindowUtil;
@@ -47,6 +48,7 @@ namespace NoFences
             DropShadow.ApplyShadows(this);
             BlurUtil.EnableBlur(Handle);
             WindowUtil.HideFromAltTab(Handle);
+            DesktopUtil.GlueToDesktop(Handle);
 
             var family = new FontFamily("Segoe UI");
             titleFont = new Font(family, 17);
@@ -70,6 +72,8 @@ namespace NoFences
 
         protected override void WndProc(ref Message m)
         {
+            //Console.WriteLine(m.Msg.ToString("X4"));
+
             // Remove border
             if (m.Msg == 0x0083)
             {
@@ -77,8 +81,13 @@ namespace NoFences
                 return;
             }
 
+            // Mouse leave
+            if (m.Msg == 0x02a2) {
+                Minify();
+            }
+
             // Prevent maximize
-            if ((m.Msg == WM_SYSCOMMAND) && m.WParam.ToInt32() == SC_MAXIMIZE)
+            if ((m.Msg == WM_SYSCOMMAND) && m.WParam.ToInt32() == 0xF032)
             {
                 m.Result = IntPtr.Zero;
                 return;
@@ -205,6 +214,7 @@ namespace NoFences
                 isMinified = true;
                 prevHeight = Height;
                 Height = titleHeight;
+                Refresh();
             }
         }
 
@@ -234,10 +244,6 @@ namespace NoFences
 
         private void FenceWindow_Paint(object sender, PaintEventArgs e)
         {
-            if ((DateTime.Now - lastRedraw).TotalMilliseconds < 1)
-                return;
-            lastRedraw = DateTime.Now;
-
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
@@ -394,6 +400,11 @@ namespace NoFences
         {
             fenceInfo.Locked = lockedToolStripMenuItem.Checked;
             Save();
+        }
+
+        private void FenceWindow_Load(object sender, EventArgs e)
+        {
+
         }
     }
 

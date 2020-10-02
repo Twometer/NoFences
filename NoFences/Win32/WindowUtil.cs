@@ -22,7 +22,8 @@ namespace NoFences.Win32
         public const int HTBOTTOMRIGHT = 17;
 
         public const int WM_SYSCOMMAND = 274;
-        public const int SC_MAXIMIZE = 61490;
+        public const int SC_MAXIMIZE = 0xF030;
+        public const int SC_MINIMIZE = 0xF020;
 
         public const UInt32 SWP_NOSIZE = 0x0001;
         public const UInt32 SWP_NOMOVE = 0x0002;
