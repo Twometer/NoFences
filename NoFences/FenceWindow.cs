@@ -261,6 +261,8 @@ namespace NoFences
             var y = itemPadding;
             foreach (var file in fenceInfo.Files)
             {
+                if (!File.Exists(file))
+                    continue;
                 RenderFile(e.Graphics, file, x, y + titleHeight);
                 x += itemWidth + itemPadding;
                 if (x + itemWidth > Width)
