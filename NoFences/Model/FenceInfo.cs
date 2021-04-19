@@ -21,6 +21,8 @@ namespace NoFences.Model
 
         public bool CanMinify { get; set; }
 
+        public int TitleHeight { get; set; } = 35;
+
         public List<string> Files { get; set; } = new List<string>();
 
         public FenceInfo()

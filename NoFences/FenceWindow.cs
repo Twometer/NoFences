@@ -15,7 +15,7 @@ namespace NoFences
 {
     public partial class FenceWindow : Form
     {
-        private const int titleHeight = 35;
+        private int titleHeight;
         private const int titleOffset = 3;
         private const int itemWidth = 75;
         private const int itemHeight = 32 + itemPadding + textHeight;
@@ -25,8 +25,8 @@ namespace NoFences
 
         private readonly FenceInfo fenceInfo;
 
-        private readonly Font titleFont;
-        private readonly Font iconFont;
+        private Font titleFont;
+        private Font iconFont;
 
         private string selectedItem;
         private string hoveringItem;
@@ -42,6 +42,13 @@ namespace NoFences
 
         private DateTime lastRedraw = DateTime.Now;
 
+        private void ReloadFonts()
+        {
+            var family = new FontFamily("Segoe UI");
+            titleFont = new Font(family, (int)Math.Floor(titleHeight / 2.0));
+            iconFont = new Font(family, 9);
+        }
+
         public FenceWindow(FenceInfo fenceInfo)
         {
             InitializeComponent();
@@ -49,10 +56,11 @@ namespace NoFences
             BlurUtil.EnableBlur(Handle);
             WindowUtil.HideFromAltTab(Handle);
             DesktopUtil.GlueToDesktop(Handle);
+            this.titleHeight = fenceInfo.TitleHeight;
+            if (titleHeight < 16 || titleHeight > 100)
+                titleHeight = 35;
 
-            var family = new FontFamily("Segoe UI");
-            titleFont = new Font(family, 17);
-            iconFont = new Font(family, 9);
+            ReloadFonts();
 
             AllowDrop = true;
 
@@ -83,7 +91,8 @@ namespace NoFences
 
             // Mouse leave
             var myrect = new Rectangle(Location, Size);
-            if (m.Msg == 0x02a2 && !myrect.IntersectsWith(new Rectangle(MousePosition, new Size(1, 1)))) {
+            if (m.Msg == 0x02a2 && !myrect.IntersectsWith(new Rectangle(MousePosition, new Size(1, 1))))
+            {
                 Minify();
             }
 
@@ -409,6 +418,24 @@ namespace NoFences
         private void FenceWindow_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void titleSizeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dialog = new HeightDialog(fenceInfo.TitleHeight);
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                fenceInfo.TitleHeight = dialog.TitleHeight;
+                titleHeight = dialog.TitleHeight;
+                ReloadFonts();
+                Minify();
+                if (isMinified)
+                {
+                    Height = titleHeight;
+                }
+                Refresh();
+                Save();
+            }
         }
     }
 
