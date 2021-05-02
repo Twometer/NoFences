@@ -1,6 +1,7 @@
 ﻿using NoFences.Model;
 using NoFences.Util;
 using NoFences.Win32;
+using Peter;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -40,7 +41,7 @@ namespace NoFences
         private ThrottledExecution throttledMove = new ThrottledExecution(TimeSpan.FromSeconds(4));
         private ThrottledExecution throttledResize = new ThrottledExecution(TimeSpan.FromSeconds(4));
 
-        private DateTime lastRedraw = DateTime.Now;
+        private ShellContextMenu shellContextMenu = new ShellContextMenu();
 
         private void ReloadFonts()
         {
@@ -203,7 +204,6 @@ namespace NoFences
 
         private void FenceWindow_MouseEnter(object sender, EventArgs e)
         {
-            Console.WriteLine("mouseenter");
             if (minifyToolStripMenuItem.Checked && isMinified)
             {
                 isMinified = false;
@@ -435,6 +435,21 @@ namespace NoFences
                 }
                 Refresh();
                 Save();
+            }
+        }
+
+        private void FenceWindow_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            if (hoveringItem != null)
+            {
+                shellContextMenu.ShowContextMenu(new[] { new FileInfo(hoveringItem) }, MousePosition);
+            }
+            else
+            {
+                appContextMenu.Show(this, e.Location);
             }
         }
     }
