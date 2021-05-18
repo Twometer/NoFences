@@ -444,7 +444,7 @@ namespace NoFences
             if (e.Button != MouseButtons.Right)
                 return;
 
-            if (hoveringItem != null)
+            if (hoveringItem != null && !ModifierKeys.HasFlag(Keys.Shift))
             {
                 shellContextMenu.ShowContextMenu(new[] { new FileInfo(hoveringItem) }, MousePosition);
             }
