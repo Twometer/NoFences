@@ -57,6 +57,7 @@ namespace NoFences
             BlurUtil.EnableBlur(Handle);
             WindowUtil.HideFromAltTab(Handle);
             DesktopUtil.GlueToDesktop(Handle);
+            DesktopUtil.PreventMinimize(Handle);
             this.titleHeight = fenceInfo.TitleHeight;
             if (titleHeight < 16 || titleHeight > 100)
                 titleHeight = 35;
