@@ -38,6 +38,9 @@ namespace NoFences
         private bool isMinified;
         private int prevHeight;
 
+        private int scrollHeight;
+        private int scrollOffset;
+
         private ThrottledExecution throttledMove = new ThrottledExecution(TimeSpan.FromSeconds(4));
         private ThrottledExecution throttledResize = new ThrottledExecution(TimeSpan.FromSeconds(4));
 
@@ -56,9 +59,10 @@ namespace NoFences
             DropShadow.ApplyShadows(this);
             BlurUtil.EnableBlur(Handle);
             WindowUtil.HideFromAltTab(Handle);
-            DesktopUtil.GlueToDesktop(Handle);
-            DesktopUtil.PreventMinimize(Handle);
+            //DesktopUtil.GlueToDesktop(Handle);
+            //DesktopUtil.PreventMinimize(Handle);
             this.titleHeight = fenceInfo.TitleHeight;
+            this.MouseWheel += FenceWindow_MouseWheel;
             if (titleHeight < 16 || titleHeight > 100)
                 titleHeight = 35;
 
@@ -256,6 +260,7 @@ namespace NoFences
 
         private void FenceWindow_Paint(object sender, PaintEventArgs e)
         {
+            e.Graphics.Clip = new Region(ClientRectangle);
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
@@ -269,11 +274,18 @@ namespace NoFences
             // Items
             var x = itemPadding;
             var y = itemPadding;
+            scrollHeight = 0;
+            e.Graphics.Clip = new Region(new Rectangle(0, titleHeight, Width, Height - titleHeight));
             foreach (var file in fenceInfo.Files)
             {
                 if (!File.Exists(file))
                     continue;
-                RenderFile(e.Graphics, file, x, y + titleHeight);
+                RenderFile(e.Graphics, file, x, y + titleHeight - scrollOffset);
+
+                var itemBottom = y + itemHeight;
+                if (itemBottom > scrollHeight)
+                    scrollHeight = itemBottom;
+
                 x += itemWidth + itemPadding;
                 if (x + itemWidth > Width)
                 {
@@ -282,6 +294,17 @@ namespace NoFences
                 }
             }
 
+            scrollHeight -= (ClientRectangle.Height - titleHeight);
+
+            // Scroll bars
+            if (scrollHeight > 0)
+            {
+                var contentHeight = Height - titleHeight;
+                var scrollbarHeight = contentHeight - scrollHeight;
+                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Black)), new Rectangle(Width - 5, titleHeight + scrollOffset, 5, scrollbarHeight));
+            }
+
+            // Click handlers
             if (shouldUpdateSelection && !hasSelectionUpdated)
                 selectedItem = null;
 
@@ -452,6 +475,20 @@ namespace NoFences
             {
                 appContextMenu.Show(this, e.Location);
             }
+        }
+
+        private void FenceWindow_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (scrollHeight < 1)
+                return;
+
+            scrollOffset -= Math.Sign(e.Delta) * 10;
+            if (scrollOffset < 0)
+               scrollOffset = 0;
+            if (scrollOffset > scrollHeight)
+              scrollOffset = scrollHeight;
+
+            Invalidate();
         }
     }
 
