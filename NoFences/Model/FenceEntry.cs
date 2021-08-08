@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System;
 using System.IO;
 using NoFences.Win32;
+using NoFences.Util;
 
 namespace NoFences.Model
 {
@@ -30,9 +31,19 @@ namespace NoFences.Model
             else return null;
         }
 
-        public Icon ExtractIcon()
+        public Icon ExtractIcon(ThumbnailProvider thumbnailProvider)
         {
-            return Type == EntryType.File ? Icon.ExtractAssociatedIcon(Path) : IconUtil.FolderLarge;
+            if (Type == EntryType.File)
+            {
+                if (thumbnailProvider.IsSupported(Path))
+                    return thumbnailProvider.GenerateThumbnail(Path);
+                else
+                    return Icon.ExtractAssociatedIcon(Path);
+            }
+            else
+            {
+                return IconUtil.FolderLarge;
+            }
         }
 
         public void Open()

@@ -3,10 +3,8 @@ using NoFences.Util;
 using NoFences.Win32;
 using Peter;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static NoFences.Win32.WindowUtil;
 
@@ -44,6 +42,8 @@ namespace NoFences
 
         private readonly ShellContextMenu shellContextMenu = new ShellContextMenu();
 
+        private readonly ThumbnailProvider thumbnailProvider = new ThumbnailProvider();
+
         private void ReloadFonts()
         {
             var family = new FontFamily("Segoe UI");
@@ -61,6 +61,7 @@ namespace NoFences
             //DesktopUtil.PreventMinimize(Handle);
             this.titleHeight = fenceInfo.TitleHeight;
             this.MouseWheel += FenceWindow_MouseWheel;
+            thumbnailProvider.IconThumbnailLoaded += ThumbnailProvider_IconThumbnailLoaded;
             if (titleHeight < 16 || titleHeight > 100)
                 titleHeight = 35;
 
@@ -305,8 +306,8 @@ namespace NoFences
 
                 scrollOffset = Math.Min(scrollOffset, scrollHeight);
             }
-            
-            
+
+
 
             // Click handlers
             if (shouldUpdateSelection && !hasSelectionUpdated)
@@ -323,7 +324,7 @@ namespace NoFences
 
         private void RenderEntry(Graphics g, FenceEntry entry, int x, int y)
         {
-            var icon = entry.ExtractIcon();
+            var icon = entry.ExtractIcon(thumbnailProvider);
             var name = entry.Name;
 
             var textPosition = new PointF(x, y + icon.Height + 5);
@@ -481,6 +482,11 @@ namespace NoFences
             if (scrollOffset > scrollHeight)
                 scrollOffset = scrollHeight;
 
+            Invalidate();
+        }
+
+        private void ThumbnailProvider_IconThumbnailLoaded(object sender, EventArgs e)
+        {
             Invalidate();
         }
 
