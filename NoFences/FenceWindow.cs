@@ -302,7 +302,11 @@ namespace NoFences
                 var contentHeight = Height - titleHeight;
                 var scrollbarHeight = contentHeight - scrollHeight;
                 e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(150, Color.Black)), new Rectangle(Width - 5, titleHeight + scrollOffset, 5, scrollbarHeight));
+
+                scrollOffset = Math.Min(scrollOffset, scrollHeight);
             }
+            
+            
 
             // Click handlers
             if (shouldUpdateSelection && !hasSelectionUpdated)
