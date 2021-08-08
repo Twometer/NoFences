@@ -58,6 +58,8 @@
     <Compile Include="HeightDialog.Designer.cs">
       <DependentUpon>HeightDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\EntryType.cs" />
+    <Compile Include="Model\FenceEntry.cs" />
     <Compile Include="Model\FenceInfo.cs" />
     <Compile Include="Model\FenceManager.cs" />
     <Compile Include="FenceWindow.cs">
@@ -73,6 +75,7 @@
     <Compile Include="Win32\BlurUtil.cs" />
     <Compile Include="Win32\DesktopUtil.cs" />
     <Compile Include="Win32\DropShadow.cs" />
+    <Compile Include="Win32\IconUtil.cs" />
     <Compile Include="Win32\ShellContextMenu.cs" />
     <Compile Include="Win32\WindowUtil.cs" />
     <EmbeddedResource Include="EditDialog.resx">

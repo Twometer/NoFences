@@ -3,11 +3,9 @@ using NoFences.Util;
 using NoFences.Win32;
 using Peter;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static NoFences.Win32.WindowUtil;
@@ -41,10 +39,10 @@ namespace NoFences
         private int scrollHeight;
         private int scrollOffset;
 
-        private ThrottledExecution throttledMove = new ThrottledExecution(TimeSpan.FromSeconds(4));
-        private ThrottledExecution throttledResize = new ThrottledExecution(TimeSpan.FromSeconds(4));
+        private readonly ThrottledExecution throttledMove = new ThrottledExecution(TimeSpan.FromSeconds(4));
+        private readonly ThrottledExecution throttledResize = new ThrottledExecution(TimeSpan.FromSeconds(4));
 
-        private ShellContextMenu shellContextMenu = new ShellContextMenu();
+        private readonly ShellContextMenu shellContextMenu = new ShellContextMenu();
 
         private void ReloadFonts()
         {
@@ -184,7 +182,7 @@ namespace NoFences
         {
             var dropped = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var file in dropped)
-                if (!fenceInfo.Files.Contains(file) && File.Exists(file))
+                if (!fenceInfo.Files.Contains(file) && ItemExists(file))
                     fenceInfo.Files.Add(file);
             Save();
             Refresh();
@@ -278,9 +276,11 @@ namespace NoFences
             e.Graphics.Clip = new Region(new Rectangle(0, titleHeight, Width, Height - titleHeight));
             foreach (var file in fenceInfo.Files)
             {
-                if (!File.Exists(file))
+                var entry = FenceEntry.FromPath(file);
+                if (entry == null)
                     continue;
-                RenderFile(e.Graphics, file, x, y + titleHeight - scrollOffset);
+
+                RenderEntry(e.Graphics, entry, x, y + titleHeight - scrollOffset);
 
                 var itemBottom = y + itemHeight;
                 if (itemBottom > scrollHeight)
@@ -317,10 +317,10 @@ namespace NoFences
             hasHoverUpdated = false;
         }
 
-        private void RenderFile(Graphics g, string file, int x, int y)
+        private void RenderEntry(Graphics g, FenceEntry entry, int x, int y)
         {
-            var icon = Icon.ExtractAssociatedIcon(file);
-            var name = Path.GetFileNameWithoutExtension(file);
+            var icon = entry.ExtractIcon();
+            var name = entry.Name;
 
             var textPosition = new PointF(x, y + icon.Height + 5);
             var textMaxSize = new SizeF(itemWidth, textHeight);
@@ -336,13 +336,13 @@ namespace NoFences
 
             if (mouseOver)
             {
-                hoveringItem = file;
+                hoveringItem = entry.Path;
                 hasHoverUpdated = true;
             }
 
             if (mouseOver && shouldUpdateSelection)
             {
-                selectedItem = file;
+                selectedItem = entry.Path;
                 shouldUpdateSelection = false;
                 hasSelectionUpdated = true;
             }
@@ -350,21 +350,10 @@ namespace NoFences
             if (mouseOver && shouldRunDoubleClick)
             {
                 shouldRunDoubleClick = false;
-                Task.Run(() =>
-                {
-                    // start asynchronously
-                    try
-                    {
-                        Process.Start(file);
-                    }
-                    catch
-                    {
-                        // just ignore
-                    }
-                });
+                entry.Open();
             }
 
-            if (selectedItem == file)
+            if (selectedItem == entry.Path)
             {
                 if (mouseOver)
                 {
@@ -484,11 +473,16 @@ namespace NoFences
 
             scrollOffset -= Math.Sign(e.Delta) * 10;
             if (scrollOffset < 0)
-               scrollOffset = 0;
+                scrollOffset = 0;
             if (scrollOffset > scrollHeight)
-              scrollOffset = scrollHeight;
+                scrollOffset = scrollHeight;
 
             Invalidate();
+        }
+
+        private bool ItemExists(string path)
+        {
+            return File.Exists(path) || Directory.Exists(path);
         }
     }
 
