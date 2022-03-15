@@ -57,7 +57,7 @@ namespace NoFences
             DropShadow.ApplyShadows(this);
             BlurUtil.EnableBlur(Handle);
             WindowUtil.HideFromAltTab(Handle);
-            //DesktopUtil.GlueToDesktop(Handle);
+            DesktopUtil.GlueToDesktop(Handle);
             //DesktopUtil.PreventMinimize(Handle);
             this.titleHeight = fenceInfo.TitleHeight;
             this.MouseWheel += FenceWindow_MouseWheel;

@@ -42,7 +42,7 @@ namespace NoFences.Win32
         public static void GlueToDesktop(IntPtr handle)
         {
             IntPtr nWinHandle = FindWindowEx(IntPtr.Zero, IntPtr.Zero, "Progman", null);
-            nWinHandle = FindWindowEx(nWinHandle, IntPtr.Zero, "SHELLDLL_DefView", null);
+            SetWindowLongPtr(handle, GWL_HWNDPARENT, nWinHandle.ToInt32());
             SetParent(handle, nWinHandle);
         }
     }
