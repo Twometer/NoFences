@@ -43,7 +43,7 @@ namespace NoFences.Win32
         {
             IntPtr nWinHandle = FindWindowEx(IntPtr.Zero, IntPtr.Zero, "Progman", null);
             SetWindowLongPtr(handle, GWL_HWNDPARENT, nWinHandle.ToInt32());
-            SetParent(handle, nWinHandle);
+           
         }
     }
 }
