@@ -12,6 +12,7 @@ namespace NoFences
 {
     public partial class FenceWindow : Form
     {
+        private int logicalTitleHeight;
         private int titleHeight;
         private const int titleOffset = 3;
         private const int itemWidth = 75;
@@ -47,7 +48,7 @@ namespace NoFences
         private void ReloadFonts()
         {
             var family = new FontFamily("Segoe UI");
-            titleFont = new Font(family, (int)Math.Floor(titleHeight / 2.0));
+            titleFont = new Font(family, (int)Math.Floor(logicalTitleHeight / 2.0));
             iconFont = new Font(family, 9);
         }
 
@@ -59,11 +60,11 @@ namespace NoFences
             WindowUtil.HideFromAltTab(Handle);
             DesktopUtil.GlueToDesktop(Handle);
             //DesktopUtil.PreventMinimize(Handle);
-            this.titleHeight = fenceInfo.TitleHeight;
+            logicalTitleHeight = (fenceInfo.TitleHeight < 16 || fenceInfo.TitleHeight > 100) ? 35 : fenceInfo.TitleHeight;
+            titleHeight = LogicalToDeviceUnits(logicalTitleHeight);
+            
             this.MouseWheel += FenceWindow_MouseWheel;
             thumbnailProvider.IconThumbnailLoaded += ThumbnailProvider_IconThumbnailLoaded;
-            if (titleHeight < 16 || titleHeight > 100)
-                titleHeight = 35;
 
             ReloadFonts();
 
@@ -74,8 +75,8 @@ namespace NoFences
             Text = fenceInfo.Name;
             Location = new Point(fenceInfo.PosX, fenceInfo.PosY);
 
-            Width = fenceInfo.Width;
-            Height = fenceInfo.Height;
+            Width = LogicalToDeviceUnits(fenceInfo.Width);
+            Height = LogicalToDeviceUnits(fenceInfo.Height);
 
             prevHeight = Height;
             lockedToolStripMenuItem.Checked = fenceInfo.Locked;
