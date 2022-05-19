@@ -445,7 +445,8 @@ namespace NoFences
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
                 fenceInfo.TitleHeight = dialog.TitleHeight;
-                titleHeight = dialog.TitleHeight;
+                logicalTitleHeight = dialog.TitleHeight;
+                titleHeight = LogicalToDeviceUnits(logicalTitleHeight);
                 ReloadFonts();
                 Minify();
                 if (isMinified)
