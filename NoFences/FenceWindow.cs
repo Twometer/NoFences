@@ -60,7 +60,7 @@ namespace NoFences
             WindowUtil.HideFromAltTab(Handle);
             DesktopUtil.GlueToDesktop(Handle);
             //DesktopUtil.PreventMinimize(Handle);
-            logicalTitleHeight = (fenceInfo.LogicalTitleHeight < 16 || fenceInfo.LogicalTitleHeight > 100) ? 35 : fenceInfo.LogicalTitleHeight;
+            logicalTitleHeight = (fenceInfo.TitleHeight < 16 || fenceInfo.TitleHeight > 100) ? 35 : fenceInfo.TitleHeight;
             titleHeight = LogicalToDeviceUnits(logicalTitleHeight);
             
             this.MouseWheel += FenceWindow_MouseWheel;
@@ -441,10 +441,10 @@ namespace NoFences
 
         private void titleSizeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dialog = new HeightDialog(fenceInfo.LogicalTitleHeight);
+            var dialog = new HeightDialog(fenceInfo.TitleHeight);
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
-                fenceInfo.LogicalTitleHeight = dialog.TitleHeight;
+                fenceInfo.TitleHeight = dialog.TitleHeight;
                 logicalTitleHeight = dialog.TitleHeight;
                 titleHeight = LogicalToDeviceUnits(logicalTitleHeight);
                 ReloadFonts();
