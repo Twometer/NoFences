@@ -18,13 +18,16 @@ namespace NoFences
 
             var appContext = new AppContext();
             MigrateFences(appContext);
-            InitializeFences();
+            InitializeFences(appContext);
             Application.Run();
         }
 
-        private static void InitializeFences()
+        private static void InitializeFences(AppContext ctx)
         {
-            new FenceWindow().Show();
+            foreach (var fence in ctx.FenceManager.LoadAllFences())
+            {
+                new FenceWindow(ctx, fence).Show();
+            }
         }
 
         private static void MigrateFences(AppContext ctx)
@@ -32,7 +35,7 @@ namespace NoFences
             var legacyFences = ctx.LegacyFenceManager.LoadAllFences();
             if (legacyFences.Count == 0) return;
 
-            if (MessageBox.Show($"NoFences found {legacyFences.Count} fence definitions from v1.x. Should they be migrated now?", "Fence migration", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show($"NoFences found {legacyFences.Count} legacy fence definitions. Should they be migrated to the new format now?", "Fence migration", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 foreach (var fence in legacyFences)
                 {

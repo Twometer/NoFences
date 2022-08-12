@@ -1,10 +1,21 @@
+using NoFences.DataModel;
+
 namespace NoFences.Windows
 {
-    public partial class FenceWindow : Form
+    internal partial class FenceWindow : Form
     {
-        public FenceWindow()
+        private readonly AppContext ctx;
+        private readonly FenceInfo fence;
+
+        public FenceWindow(AppContext ctx, FenceInfo fence)
         {
             InitializeComponent();
+            this.ctx = ctx;
+            this.fence = fence;
+
+            Text = fence.Options.Title;
+            Location = fence.Location;
+            Size = fence.Size;
         }
 
         private void FenceWindow_FormClosed(object sender, FormClosedEventArgs e)

@@ -19,6 +19,20 @@ namespace NoFences.Services
             EnsureDirectoryExists(metaDir);
         }
 
+        public List<FenceInfo> LoadAllFences()
+        {
+            var fences = new List<FenceInfo>();
+
+            foreach (var fenceFile in metaDir.EnumerateFiles("*.xml"))
+            {
+                var fenceXml = File.ReadAllText(fenceFile.FullName);
+                var fence = XmlConverter.Deserialize<FenceInfo>(fenceXml);
+                fences.Add(fence);
+            }
+
+            return fences;
+        }
+
         public void SaveFence(FenceInfo info)
         {
             var fencePath = GetFenceFileName(info);
