@@ -10,6 +10,10 @@
 
         public bool Animated { get; set; } = false;
 
+        public bool Shadows { get; set; } = true;
+
+        public bool Translucent { get; set; } = true;
+
         public int TitleHeight { get; set; } = 32;
 
         public Color TitleColor { get; set; } = Color.White;
