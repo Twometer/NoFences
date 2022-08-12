@@ -1,0 +1,29 @@
+# NoFences v2.0 Feature ToDo List
+
+-   [ ] Multiple operating modes for a fence
+    -   [ ] Shortcut-based: Only create a link to the file or folder (classic operating mode)
+    -   [ ] Moving: Actually move the icon into the fence
+    -   [ ] "Portal": Show contents of another folder as the fence
+-   [ ] Fence Customization
+    -   [ ] Minified / auto-hide fences
+    -   [ ] Animations
+    -   [ ] Icon Size
+    -   [ ] Title Height, Font, Color
+    -   [ ] Title
+    -   [ ] Background Color
+    -   [ ] Opacity
+-   [ ] Improve fence item context menu
+    -   [ ] Custom menu should match Windows appearance and items, and should be the default for right-click
+    -   [ ] Use Shift + right-click to open the system's context menu
+-   [ ] Systray Icon with menu
+    -   [ ] About / Help
+    -   [ ] Global Settings
+    -   [ ] Exit NoFences
+-   [ ] Reorder items inside a fence
+-   [ ] Double-click Desktop to show/hide fences
+-   [ ] Proper Hi-DPI support
+-   [ ] Image thumbnail rendering
+-   [ ] Improve scrollbars in fences
+-   [ ] Drag icons in and out of fence
+-   [ ] Automatic migration from 1.x
+-   [ ] Documentation / user guide
