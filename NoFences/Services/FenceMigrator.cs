@@ -10,7 +10,7 @@ namespace NoFences.Services
             return new FenceInfo
             {
                 Id = legacy.Id,
-                Location = new Point(legacy.PosX, legacy.PosX),
+                Location = new Point(legacy.PosX, legacy.PosY),
                 Size = new Size(legacy.Width, legacy.Height),
                 Mode = FenceMode.ShortcutBased,
                 Options = new FenceOptions
