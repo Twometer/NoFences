@@ -1,3 +1,6 @@
+using NoFences.Migration;
+using NoFences.Windows;
+
 namespace NoFences
 {
     internal static class Program
@@ -8,10 +11,17 @@ namespace NoFences
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            using var mutex = new Mutex(true, "NoFences", out var createdNew);
+            if (!createdNew) return;
+
             ApplicationConfiguration.Initialize();
-            Application.Run(new FenceWindow());
+            LoadFences();
+            Application.Run();
+        }
+
+        private static void LoadFences()
+        {
+            new FenceWindow().Show();
         }
     }
 }

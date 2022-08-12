@@ -1,4 +1,4 @@
-﻿namespace NoFences
+﻿namespace NoFences.Windows
 {
     partial class FenceWindow
     {
@@ -37,6 +37,7 @@
             this.ClientSize = new System.Drawing.Size(562, 461);
             this.Name = "FenceWindow";
             this.Text = "Fence Window";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FenceWindow_FormClosed);
             this.ResumeLayout(false);
 
         }
