@@ -25,5 +25,29 @@ namespace NoFences.Windows
                 Application.Exit();
             }
         }
+
+        private void FenceWindow_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data?.GetDataPresent(DataFormats.FileDrop) == false || fence.Options.Locked)
+                return;
+ 
+            switch (fence.Mode)
+            {
+                case FenceMode.ShortcutBased:
+                    e.Effect = DragDropEffects.Link;
+                    break;
+                case FenceMode.Owning:
+                    e.Effect = DragDropEffects.Move;
+                    break;
+                case FenceMode.Mirroring:
+                    e.Effect = DragDropEffects.None;
+                    break;
+            }
+        }
+
+        private void SaveFence()
+        {
+            ctx.FenceManager.SaveFence(fence);
+        }
     }
 }
