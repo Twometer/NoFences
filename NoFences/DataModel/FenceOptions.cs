@@ -14,7 +14,7 @@
 
         public Color TitleColor { get; set; } = Color.White;
 
-        public FontFamily TitleFont { get; set; } = new FontFamily("Segoe UI");
+        public string TitleFont { get; set; } = "Segoe UI";
 
         public int IconSize { get; set; } = 32;
 

@@ -7,7 +7,7 @@ namespace NoFences.DataModel.Legacy
     {
         public Guid Id { get; set; }
 
-        public string Name { get; set; } = String.Empty;
+        public string Name { get; set; } = string.Empty;
 
         public int PosX { get; set; }
 

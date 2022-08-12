@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Xml;
+using System.Xml.Serialization;
 
 namespace NoFences.Services
 {
@@ -7,8 +8,9 @@ namespace NoFences.Services
         public static string Serialize(object obj)
         {
             using var writer = new StringWriter();
+            using var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings { Indent = true });
             var serializer = new XmlSerializer(obj.GetType());
-            serializer.Serialize(writer, obj);
+            serializer.Serialize(xmlWriter, obj);
             return writer.ToString();
         }
 

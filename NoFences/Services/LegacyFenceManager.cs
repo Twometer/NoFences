@@ -2,14 +2,14 @@
 
 namespace NoFences.Services
 {
-    internal class LegacyFenceLoader
+    internal class LegacyFenceManager
     {
         private const string BaseFolderName = "NoFences";
         private const string MetaFileName = "__fence_metadata.xml";
 
         private readonly DirectoryInfo baseDir;
 
-        public LegacyFenceLoader()
+        public LegacyFenceManager()
         {
             baseDir = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), BaseFolderName));
         }
@@ -27,6 +27,12 @@ namespace NoFences.Services
                     fences.Add(fenceInfo);
             }
             return fences;
+        }
+
+        public void Delete(LegacyFenceInfo info)
+        {
+            var dir = Path.Combine(baseDir.FullName, info.Id.ToString());
+            Directory.Delete(dir, true);
         }
 
         private LegacyFenceInfo? TryLoadFenceInfo(DirectoryInfo fenceDir)
