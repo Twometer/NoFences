@@ -15,7 +15,9 @@ namespace NoFences
             if (!createdNew) return;
 
             ApplicationConfiguration.Initialize();
-            MigrateFences();
+
+            var appContext = new AppContext();
+            MigrateFences(appContext);
             InitializeFences();
             Application.Run();
         }
@@ -25,19 +27,17 @@ namespace NoFences
             new FenceWindow().Show();
         }
 
-        private static void MigrateFences()
+        private static void MigrateFences(AppContext ctx)
         {
-            var legacyManager = new LegacyFenceManager();
-            var legacyFences = legacyManager.LoadAll();
+            var legacyFences = ctx.LegacyFenceManager.LoadAllFences();
             if (legacyFences.Count == 0) return;
 
             if (MessageBox.Show($"NoFences found {legacyFences.Count} fence definitions from v1.x. Should they be migrated now?", "Fence migration", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                var manager = new FenceManager();
                 foreach (var fence in legacyFences)
                 {
-                    manager.SaveFence(FenceMigrator.Migrate(fence));
-                    legacyManager.Delete(fence);
+                    ctx.FenceManager.SaveFence(FenceMigrator.Migrate(fence));
+                    ctx.LegacyFenceManager.DeleteFence(fence);
                 }
             }
         }

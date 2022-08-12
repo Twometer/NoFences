@@ -14,7 +14,7 @@ namespace NoFences.Services
             baseDir = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), BaseFolderName));
         }
 
-        public List<LegacyFenceInfo> LoadAll()
+        public List<LegacyFenceInfo> LoadAllFences()
         {
             var fences = new List<LegacyFenceInfo>();
             if (!baseDir.Exists)
@@ -29,13 +29,13 @@ namespace NoFences.Services
             return fences;
         }
 
-        public void Delete(LegacyFenceInfo info)
+        public void DeleteFence(LegacyFenceInfo info)
         {
             var dir = Path.Combine(baseDir.FullName, info.Id.ToString());
             Directory.Delete(dir, true);
         }
 
-        private LegacyFenceInfo? TryLoadFenceInfo(DirectoryInfo fenceDir)
+        private static LegacyFenceInfo? TryLoadFenceInfo(DirectoryInfo fenceDir)
         {
             var metaFile = new FileInfo(Path.Combine(fenceDir.FullName, MetaFileName));
             if (!metaFile.Exists)
@@ -44,6 +44,5 @@ namespace NoFences.Services
             using var reader = new StreamReader(metaFile.FullName);
             return XmlConverter.Deserialize<LegacyFenceInfo>(reader);
         }
-
     }
 }
