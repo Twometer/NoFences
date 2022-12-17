@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
-using System.Security.Permissions;
+using System.Threading;
 
 namespace Peter
 {
@@ -1509,7 +1508,7 @@ namespace Peter
                 m_hookType,
                 m_filterFunc,
                 IntPtr.Zero,
-                (int)AppDomain.GetCurrentThreadId());
+                (int)Thread.CurrentThread.ManagedThreadId);
         }
         // ************************************************************************
 
