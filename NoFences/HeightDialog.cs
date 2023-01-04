@@ -12,28 +12,28 @@ namespace NoFences
 {
     public partial class HeightDialog : Form
     {
-        public int TitleHeight => trackBar1.Value;
+        public int TitleHeight => trackBarTitleHeight.Value;
 
         public HeightDialog(int val)
         {
             InitializeComponent();
-            trackBar1.Value = val;
+            trackBarTitleHeight.Value = val;
             UpdateText();
         }
 
         private void UpdateText()
         {
-            label1.Text = trackBar1.Value + "px";
+            labelTitleHeight.Text = trackBarTitleHeight.Value + "px";
         }
 
-        private void trackBar1_Scroll(object sender, EventArgs e)
+        private void trackBarTitleHeight_Scroll(object sender, EventArgs e)
         {
             UpdateText();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnRestore_Click(object sender, EventArgs e)
         {
-            trackBar1.Value = 35;
+            trackBarTitleHeight.Value = 35;
             UpdateText();
         }
 

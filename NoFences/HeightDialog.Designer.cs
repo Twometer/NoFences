@@ -31,10 +31,10 @@ namespace NoFences
         {
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            this.trackBarTitleHeight = new System.Windows.Forms.TrackBar();
+            this.labelTitleHeight = new System.Windows.Forms.Label();
+            this.btnRestore = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTitleHeight)).BeginInit();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -57,35 +57,35 @@ namespace NoFences
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             // 
-            // trackBar1
+            // trackBarTitleHeight
             // 
-            this.trackBar1.Location = new System.Drawing.Point(12, 20);
-            this.trackBar1.Maximum = 100;
-            this.trackBar1.Minimum = 20;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(315, 45);
-            this.trackBar1.TabIndex = 6;
-            this.trackBar1.Value = 20;
-            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            this.trackBarTitleHeight.Location = new System.Drawing.Point(12, 20);
+            this.trackBarTitleHeight.Maximum = 100;
+            this.trackBarTitleHeight.Minimum = 20;
+            this.trackBarTitleHeight.Name = "trackBarTitleHeight";
+            this.trackBarTitleHeight.Size = new System.Drawing.Size(315, 45);
+            this.trackBarTitleHeight.TabIndex = 6;
+            this.trackBarTitleHeight.Value = 20;
+            this.trackBarTitleHeight.Scroll += new System.EventHandler(this.trackBarTitleHeight_Scroll);
             // 
-            // label1
+            // labelTitleHeight
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(333, 23);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(30, 13);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "20px";
+            this.labelTitleHeight.AutoSize = true;
+            this.labelTitleHeight.Location = new System.Drawing.Point(333, 23);
+            this.labelTitleHeight.Name = "labelTitleHeight";
+            this.labelTitleHeight.Size = new System.Drawing.Size(30, 13);
+            this.labelTitleHeight.TabIndex = 7;
+            this.labelTitleHeight.Text = "20px";
             // 
-            // button1
+            // btnRestore
             // 
-            this.button1.Location = new System.Drawing.Point(12, 80);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(91, 23);
-            this.button1.TabIndex = 8;
-            this.button1.Text = "Restore default";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnRestore.Location = new System.Drawing.Point(12, 80);
+            this.btnRestore.Name = "btnRestore";
+            this.btnRestore.Size = new System.Drawing.Size(91, 23);
+            this.btnRestore.TabIndex = 8;
+            this.btnRestore.Text = "Restore default";
+            this.btnRestore.UseVisualStyleBackColor = true;
+            this.btnRestore.Click += new System.EventHandler(this.btnRestore_Click);
             // 
             // HeightDialog
             // 
@@ -93,9 +93,9 @@ namespace NoFences
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(378, 117);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.trackBar1);
+            this.Controls.Add(this.btnRestore);
+            this.Controls.Add(this.labelTitleHeight);
+            this.Controls.Add(this.trackBarTitleHeight);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -105,7 +105,7 @@ namespace NoFences
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change title height";
             this.Load += new System.EventHandler(this.HeightDialog_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTitleHeight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -115,8 +115,8 @@ namespace NoFences
 
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOk;
-        private System.Windows.Forms.TrackBar trackBar1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TrackBar trackBarTitleHeight;
+        private System.Windows.Forms.Label labelTitleHeight;
+        private System.Windows.Forms.Button btnRestore;
     }
 }
