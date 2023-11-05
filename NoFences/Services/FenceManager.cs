@@ -9,10 +9,17 @@ namespace NoFences.Services
 
         private readonly DirectoryInfo baseDir;
         private readonly DirectoryInfo metaDir;
+        private readonly string strExeFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
 
         public FenceManager()
         {
-            baseDir = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), BaseFolderName));
+            if (Directory.Exists(strExeFilePath + ".portable")){
+                baseDir = strExeFilePath + ".portable";
+            }
+            else {
+                baseDir = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), BaseFolderName));
+            }
             EnsureDirectoryExists(baseDir);
 
             metaDir = new DirectoryInfo(Path.Combine(baseDir.FullName, MetaFolderName));
