@@ -15,7 +15,7 @@ namespace NoFences.Services
         public FenceManager()
         {
             if (Directory.Exists(strExeFilePath + ".portable")){
-                baseDir = strExeFilePath + ".portable";
+                baseDir = new DirectoryInfo(strExeFilePath + ".portable");
             }
             else {
                 baseDir = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), BaseFolderName));
