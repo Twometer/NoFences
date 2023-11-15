@@ -86,6 +86,9 @@
     <Compile Include="Win32\IconUtil.cs" />
     <Compile Include="Win32\ShellContextMenu.cs" />
     <Compile Include="Win32\WindowUtil.cs" />
+    <EmbeddedResource Include="EditDialog.cs.resx">
+      <DependentUpon>EditDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EditDialog.resx">
       <DependentUpon>EditDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -93,11 +96,17 @@
     <EmbeddedResource Include="EditDialog.zh-CN.resx">
       <DependentUpon>EditDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FenceWindow.cs.resx">
+      <DependentUpon>FenceWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FenceWindow.resx">
       <DependentUpon>FenceWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FenceWindow.zh-CN.resx">
       <DependentUpon>FenceWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeightDialog.cs.resx">
+      <DependentUpon>HeightDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HeightDialog.resx">
       <DependentUpon>HeightDialog.cs</DependentUpon>
