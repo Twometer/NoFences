@@ -110,6 +110,9 @@ namespace NoFences.Win32
         public static extern void SetLastError(int dwErrorCode);
         #endregion
 
+        [DllImport("uxtheme.dll", EntryPoint = "#135", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern int SetPreferredAppMode(int preferredAppMode);
+
         public static void HideFromAltTab(IntPtr Handle)
         {
             SetWindowPos(Handle, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);

@@ -2,6 +2,7 @@
 using System;
 using System.Threading;
 using System.Windows.Forms;
+using NoFences.Win32;
 
 namespace NoFences
 {
@@ -13,6 +14,8 @@ namespace NoFences
         [STAThread]
         static void Main()
         {
+            WindowUtil.SetPreferredAppMode(1);
+
             using (var mutex = new Mutex(true, "No_fences", out var createdNew))
             {
                 if (createdNew)
