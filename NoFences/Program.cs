@@ -14,6 +14,8 @@ namespace NoFences
         [STAThread]
         static void Main()
         {
+            //allows the context menu to be in dark mode
+            //inherits from the system settings
             WindowUtil.SetPreferredAppMode(1);
 
             using (var mutex = new Mutex(true, "No_fences", out var createdNew))
