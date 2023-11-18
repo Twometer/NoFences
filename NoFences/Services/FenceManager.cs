@@ -9,7 +9,7 @@ namespace NoFences.Services
 
         private readonly DirectoryInfo baseDir;
         private readonly DirectoryInfo metaDir;
-        
+
         public FenceManager()
         {
             string strExeFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
