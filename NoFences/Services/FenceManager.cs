@@ -12,7 +12,15 @@ namespace NoFences.Services
 
         public FenceManager()
         {
-            baseDir = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), BaseFolderName));
+            string strExeFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            string portableDir = Path.Combine(strExeFilePath, ".portable");
+            
+            if (Directory.Exists(portableDir)){
+                baseDir = new DirectoryInfo(portableDir);
+            }
+            else {
+                baseDir = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), BaseFolderName));
+            }
             EnsureDirectoryExists(baseDir);
 
             metaDir = new DirectoryInfo(Path.Combine(baseDir.FullName, MetaFolderName));
